@@ -6,6 +6,16 @@ A simulated, end-to-end predictive maintenance system for construction equipment
 
 ---
 
+## Demo
+
+![Dashboard Screenshot](assets/dashboard.png)
+
+> Live dashboard showing a **Critical** alert — temperature spike to 111°C and vibration at 6.42 mm/s triggered by anomaly injection. Risk gauge at 100%.
+
+![Demo Recording](assets/demo.webp)
+
+---
+
 ## Features
 
 - **Sensor simulation** — generates temperature, vibration, engine load, and operating hours every 3 seconds with injected anomaly patterns
