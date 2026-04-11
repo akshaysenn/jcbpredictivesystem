@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JCB Predictive Maintenance — Dashboard</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- ── Alert Banner ─────────────────────────────────────────────────────── -->
+  <div id="alert-banner" class="alert-banner normal">
+    <span id="alert-icon">🟢</span>
+    <span id="alert-text">System Normal — Monitoring Active</span>
+  </div>
+
+  <!-- ── Header ───────────────────────────────────────────────────────────── -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">🚜 JCB</div>
+      <div>
+        <h1>Predictive Maintenance System</h1>
+        <p class="subtitle">Real-time sensor monitoring &amp; failure prediction</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="status-dot" id="status-dot"></div>
+      <span id="last-updated">Connecting …</span>
+    </div>
+  </header>
+
+  <!-- ── Main Grid ─────────────────────────────────────────────────────────── -->
+  <main class="main">
+
+    <!-- Sensor Cards -->
+    <section class="cards-row">
+      <div class="card" id="card-temp">
+        <div class="card-label">🌡️ Temperature</div>
+        <div class="card-value" id="val-temp">—</div>
+        <div class="card-unit">°C</div>
+      </div>
+      <div class="card" id="card-vib">
+        <div class="card-label">📳 Vibration</div>
+        <div class="card-value" id="val-vib">—</div>
+        <div class="card-unit">mm/s</div>
+      </div>
+      <div class="card" id="card-load">
+        <div class="card-label">⚙️ Engine Load</div>
+        <div class="card-value" id="val-load">—</div>
+        <div class="card-unit">%</div>
+      </div>
+      <div class="card" id="card-hours">
+        <div class="card-label">⏱️ Op. Hours</div>
+        <div class="card-value" id="val-hours">—</div>
+        <div class="card-unit">hrs</div>
+      </div>
+    </section>
+
+    <!-- Risk Gauge + Alert Feed -->
+    <section class="middle-row">
+      <div class="gauge-panel">
+        <h2>Failure Risk</h2>
+        <div class="gauge-wrap">
+          <svg class="gauge-svg" viewBox="0 0 200 120">
+            <!-- Background arc -->
+            <path class="gauge-bg" d="M 20 110 A 90 90 0 0 1 180 110" />
+            <!-- Foreground arc (length driven by JS) -->
+            <path class="gauge-fg" id="gauge-fg"
+                  d="M 20 110 A 90 90 0 0 1 180 110"
+                  stroke-dasharray="0 283" />
+          </svg>
+          <div class="gauge-center">
+            <div class="gauge-pct" id="gauge-pct">—</div>
+            <div class="gauge-label">risk</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert-log-panel">
+        <h2>Alert Log</h2>
+        <ul id="alert-log" class="alert-log"></ul>
+      </div>
+    </section>
+
+    <!-- Charts -->
+    <section class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-title">Temperature (°C)</div>
+        <canvas id="chart-temp"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Vibration (mm/s)</div>
+        <canvas id="chart-vib"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Engine Load (%)</div>
+        <canvas id="chart-load"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Risk Score (%)</div>
+        <canvas id="chart-risk"></canvas>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="/static/dashboard.js"></script>
+</body>
+</html>

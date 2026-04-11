@@ -1,0 +1,224 @@
+/* ── Reset & Base ─────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg:        #0d1117;
+  --surface:   #161b22;
+  --surface2:  #1c2330;
+  --border:    #30363d;
+  --text:      #e6edf3;
+  --muted:     #8b949e;
+  --accent:    #58a6ff;
+
+  --normal:    #3fb950;
+  --warning:   #d29922;
+  --critical:  #f85149;
+
+  --radius:    12px;
+  --gap:       16px;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Alert Banner ─────────────────────────────────────────────────────────── */
+.alert-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 24px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background 0.4s, color 0.4s;
+}
+.alert-banner.normal   { background: #0f2d16; color: var(--normal); }
+.alert-banner.warning  { background: #2d1f00; color: var(--warning); }
+.alert-banner.critical { background: #2d0c0a; color: var(--critical); animation: pulse-banner 1s infinite alternate; }
+
+@keyframes pulse-banner {
+  from { opacity: 1; } to { opacity: 0.75; }
+}
+
+/* ── Header ───────────────────────────────────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.header-left { display: flex; align-items: center; gap: 14px; }
+.logo { font-size: 2rem; }
+h1 { font-size: 1.2rem; font-weight: 700; color: var(--text); }
+.subtitle { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+
+.header-right { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--muted); }
+.status-dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--normal);
+  animation: blink 1.4s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ── Main ─────────────────────────────────────────────────────────────────── */
+.main {
+  flex: 1;
+  padding: var(--gap) 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+/* ── Sensor Cards ─────────────────────────────────────────────────────────── */
+.cards-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--gap);
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: border-color 0.3s;
+}
+.card.anomaly { border-color: var(--critical); }
+.card-label  { font-size: 0.78rem; color: var(--muted); font-weight: 500; }
+.card-value  { font-size: 2rem; font-weight: 700; color: var(--accent); letter-spacing: -1px; }
+.card-unit   { font-size: 0.75rem; color: var(--muted); }
+
+/* ── Middle Row ───────────────────────────────────────────────────────────── */
+.middle-row {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: var(--gap);
+}
+
+/* Gauge */
+.gauge-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.gauge-panel h2, .alert-log-panel h2 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  align-self: flex-start;
+}
+.gauge-wrap {
+  position: relative;
+  width: 180px;
+  height: 110px;
+  margin-top: 8px;
+}
+.gauge-svg { width: 100%; height: 100%; overflow: visible; }
+
+.gauge-bg {
+  fill: none;
+  stroke: var(--surface2);
+  stroke-width: 16;
+  stroke-linecap: round;
+}
+.gauge-fg {
+  fill: none;
+  stroke: var(--normal);
+  stroke-width: 16;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.6s ease, stroke 0.4s;
+}
+.gauge-fg.warning  { stroke: var(--warning); }
+.gauge-fg.critical { stroke: var(--critical); }
+
+.gauge-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 4px;
+}
+.gauge-pct   { font-size: 1.8rem; font-weight: 700; color: var(--text); }
+.gauge-label { font-size: 0.7rem; color: var(--muted); }
+
+/* Alert Log */
+.alert-log-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+}
+.alert-log {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+  max-height: 180px;
+}
+.alert-log li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8rem;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--surface2);
+  animation: slide-in 0.3s ease;
+}
+@keyframes slide-in { from { transform: translateX(-10px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+.alert-log li .log-time { color: var(--muted); flex-shrink: 0; font-size: 0.72rem; }
+.alert-log li .log-level { font-weight: 600; flex-shrink: 0; }
+.alert-log li.normal  .log-level { color: var(--normal); }
+.alert-log li.warning .log-level { color: var(--warning); }
+.alert-log li.critical .log-level { color: var(--critical); }
+
+/* ── Charts ───────────────────────────────────────────────────────────────── */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--gap);
+}
+.chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.chart-title { font-size: 0.8rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+canvas { max-height: 160px; }
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .cards-row { grid-template-columns: repeat(2, 1fr); }
+  .middle-row { grid-template-columns: 1fr; }
+  .charts-grid { grid-template-columns: 1fr; }
+}
