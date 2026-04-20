@@ -1,0 +1,106 @@
+
+
+---
+
+# JCB Predictive Maintenance System — PRD v1.1
+
+## 1. Problem & solution
+
+Construction equipment like JCBs fail unexpectedly because operators have no visibility into machine health until something breaks. This project builds a simulated predictive maintenance system that ingests real-time sensor data, runs ML inference, and surfaces actionable alerts before failure occurs — demonstrating an end-to-end industrial AI pipeline.
+
+---
+
+## 2. Objectives
+
+- Predict machine failure probability with >80% model accuracy
+- Surface real-time sensor readings and risk scores on a live dashboard
+- Trigger tiered alerts (Normal / Warning / Critical) based on risk thresholds
+- Simulate continuous machine operation with injected anomaly patterns
+
+---
+
+## 3. Core features
+
+**3.1 Sensor simulation engine**
+Generates synthetic time-series data every 3–5 seconds for: temperature (°C), vibration (mm/s), engine load (%), and operating hours. Anomaly injection produces realistic pre-failure patterns — gradual temperature drift, vibration spikes, load surges — to give the model meaningful training signal.
+
+**3.2 Failure prediction engine**
+Trains a Random Forest classifier (Logistic Regression as baseline for comparison) on the simulated dataset. Inputs are the four sensor features; outputs are a binary failure label (0/1) and a continuous risk score (0–100%). The model is serialised with `joblib` and loaded at runtime by the API.
+
+**3.3 Prediction API**
+A lightweight Flask/FastAPI endpoint (`POST /predict`) accepts a JSON payload of sensor readings and returns the risk score and alert level. Inference must complete in under 500ms.
+
+**3.4 Alert system**
+Three levels: Normal (risk < 30%), Warning (30–70%), Critical (>70%). Alerts are surfaced in the dashboard with colour coding and — for Critical — a persistent banner notification.
+
+**3.5 Real-time dashboard**
+Displays: live sensor value cards, rolling time-series charts for each sensor (last 60 data points), a circular risk gauge, and an alert feed. Updates every 3–5 seconds via polling or WebSocket.
+
+---
+
+## 4. Tech stack
+
+| Layer | Technology |
+|---|---|
+| Data simulation | Python, NumPy, Pandas |
+| ML model | Scikit-learn (RandomForestClassifier) |
+| API | Flask or FastAPI |
+| Frontend | HTML/CSS/JS or React |
+| Charts | Chart.js |
+| Model persistence | joblib |
+
+---
+
+## 5. Data schema
+
+**Training features:** `temperature`, `vibration`, `engine_load`, `operating_hours`
+**Labels:** `failure` (0/1), `risk_score` (0.0–1.0)
+**Simulation output:** JSON record per tick — `{ timestamp, machine_id, temperature, vibration, engine_load, operating_hours }`
+
+---
+
+## 6. Functional requirements
+
+| ID | Requirement |
+|---|---|
+| FR1 | Simulate sensor data at configurable tick rate |
+| FR2 | Inject anomaly patterns with controllable frequency |
+| FR3 | Train and evaluate ML model; log accuracy, precision, recall |
+| FR4 | Expose `/predict` API endpoint with <500ms response |
+| FR5 | Dashboard renders live charts and risk gauge |
+| FR6 | Alert system triggers at defined risk thresholds |
+| FR7 | System handles at least one simulated machine (multi-machine optional) |
+
+---
+
+## 7. Non-functional requirements
+
+- Prediction latency: <500ms end-to-end
+- Dashboard refresh: every 3–5 seconds
+- Model accuracy: >80% on held-out test set
+- UI: responsive, works on desktop and tablet
+
+---
+
+## 8. MVP scope
+
+Train on synthetic data → serve via API → display on a single-page dashboard with live charts and colour-coded alerts. Multi-machine support and persistent logging are post-MVP.
+
+---
+
+## 9. Success metrics
+
+- Random Forest accuracy ≥ 80% on test split
+- Risk gauge and charts update without manual refresh
+- Alert levels trigger correctly at defined thresholds
+- End-to-end demo runnable with a single `python main.py` command
+
+---
+
+A few additions worth considering as you build this out:
+
+**Anomaly injection controls** — a slider or config parameter for anomaly frequency makes demos much more compelling; you can crank it up to trigger a Critical alert on command in front of judges.
+
+**Model comparison tab** — showing Logistic Regression vs Random Forest side by side (accuracy, F1, confusion matrix) adds a genuine ML depth angle that judges tend to appreciate.
+
+**Maintenance recommendation text** — once Critical fires, display a short suggested action ("Schedule inspection within 4 hours") alongside the alert. It makes the system feel production-ready rather than purely academic.

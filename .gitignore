@@ -9,8 +9,8 @@ dist/
 build/
 .eggs/
 
-# ML model (regenerated on first run)
-model.joblib
+# ML model — committed so Render can serve it without retraining
+# model.joblib  ← intentionally tracked in git
 
 # Environment
 .env
